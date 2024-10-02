@@ -1,0 +1,17 @@
+1. setup the server[50 mins]:
+
+- connect to image splash
+- save result in json file
+- retrieve results from json file
+
+2. set up the in memory queue that will contain the pending requests. the logic is[16 mins]:
+
+- if a request comes it is added to the begining of the queue
+- the queue's head is then checked if the elapsed time is zero then the request is processed
+- if the request is still in-progress push it to the end of the queue
+- repeat until queue is empty
+
+3. setup the basic client[58 mins]:
+
+- A button to create new requests
+- a list to display all finished requests
