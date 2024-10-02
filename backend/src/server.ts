@@ -16,6 +16,9 @@ app.use(
 
 // Use job routes`
 app.use("/jobs", jobRoutes);
+app.get("/healthcheck", (req, res) => {
+  res.status(200).json({ status: "OK", message: "Server is running." });
+});
 
 // Start the server
 app.listen(port, () => {

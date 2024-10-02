@@ -1,6 +1,6 @@
 1. setup the server[50 mins]:
 
-- connect to image splash
+- connect to image splash[splash has not yet finished reviewing my application therefore I do not have an api key]
 - save result in json file
 - retrieve results from json file
 
@@ -15,3 +15,44 @@
 
 - A button to create new requests
 - a list to display all finished requests
+
+4. create an async queue to push all the post requests in it[14 mins]
+
+- the queue should first check if the backend is responsive
+- if the backend is responsive it should start sending the requests and dequeueing the queue
+- if the backend is not responsive it should retry 5 times then alert the user that the requests could not be processed
+
+# Application Logic
+
+## Backend
+
+The **backend** contains a queue that stores incoming requests. Here's how it works:
+
+1. **Queue Structure**: Each incoming request is stored at the **start** of the queue when it arrives.
+2. **Processing Logic**:
+   - The **head** of the queue is checked to determine if the duration of the processing is complete.
+   - If the processing is complete, the job is processed and stored in a JSON file.
+   - If the processing is not complete, the job is pushed to the **tail** of the queue.
+
+## Frontend
+
+The **frontend** consists of a simple UI for creating jobs. It includes an async queue for managing POST requests. The functionality includes:
+
+1. **Job Creation**:
+   - When the **Create Job** button is clicked, a POST request is pushed into the async queue.
+2. **Backend Responsiveness Check**:
+   - Before processing the queue, it first checks if the backend is responsive.
+   - If the backend is responsive, the request is sent to the backend.
+   - If the backend is unresponsive, a health check is called repeatedly, with a maximum retry limit of 5 attempts.
+3. **Handling Unresponsive Backend**:
+   - If the backend does not respond after 5 retries, the jobs are stored in the queue, waiting for an internet connection to return before resuming sending requests to the backend.
+
+## Additional Improvements
+
+1. **Testting**:
+
+- the application will benefit from some unit testing to check the queue logic
+
+1. **WAL**:
+
+- a write ahead log can be used in the backend to ensure that there will be no data loss if the server went down as it can be used to store requests as soon as they come and later to restore the queue state when the server is switched on again
